@@ -1,0 +1,24 @@
+/* App-wide general overrides (Reset scroll & animations) */
+html, body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbars for premium glass windows */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-orange);
+}

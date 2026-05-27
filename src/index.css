@@ -1,0 +1,392 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-title: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* Premium Color Palette */
+  --bg-primary: #0a0a0c;
+  --bg-secondary: #131317;
+  --bg-card: #1c1c24;
+  --bg-card-hover: #252530;
+  
+  --primary: #ff2a36;
+  --primary-hover: #e61e2a;
+  --primary-rgb: 255, 42, 54;
+  
+  --accent-green: #00e676;
+  --accent-orange: #ff9100;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #9ea0ab;
+  --text-muted: #646670;
+  
+  --glass-bg: rgba(19, 19, 23, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-border-glow: rgba(255, 42, 54, 0.15);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
+  --neon-glow: 0 0 20px rgba(255, 42, 54, 0.35);
+  --neon-glow-strong: 0 0 30px rgba(255, 42, 54, 0.6);
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-xl: 32px;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-fast);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+  outline: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-card);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Brand logo helpers */
+.brand-logo {
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-logo-footer {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brand-logo-login {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+/* Utility Classes & Animations */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-glow {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border-glow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 42, 54, 0.1);
+}
+
+.neon-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 0.8rem 1.8rem;
+  font-family: var(--font-title);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--neon-glow);
+  transition: var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.neon-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: var(--neon-glow-strong);
+  transform: translateY(-2px);
+}
+
+.neon-btn:active {
+  transform: translateY(0);
+}
+
+.neon-text-red {
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(255, 42, 54, 0.5);
+}
+
+.section-padding {
+  padding: 5rem 5% 4rem 5%;
+}
+
+/* Top-page hero sections need extra clearance for the fixed navbar */
+.page-top-padding {
+  padding-top: 90px;
+}
+
+@media (max-width: 900px) {
+  .section-padding {
+    padding: 4rem 5% 3rem 5%;
+  }
+}
+
+@media (max-width: 576px) {
+  .section-padding {
+    padding: 3.5rem 1.2rem 2.5rem 1.2rem;
+  }
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 15px rgba(255, 42, 54, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(255, 42, 54, 0.6); }
+  100% { box-shadow: 0 0 15px rgba(255, 42, 54, 0.3); }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, #2a2a35 37%, var(--bg-card) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: var(--border-radius-sm);
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Custom Checkbox/Radio */
+.custom-radio, .custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  background: transparent;
+}
+
+.custom-checkbox {
+  border-radius: 4px;
+}
+
+.custom-radio:checked, .custom-checkbox:checked {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.custom-radio:checked::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.custom-checkbox:checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Notification Popups */
+.notification-container {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: calc(100vw - 32px);
+}
+
+.notification-toast {
+  background: rgba(24, 24, 36, 0.95);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 1rem 1.4rem;
+  border-radius: 16px;
+  border-left: 5px solid var(--primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInRight var(--transition-fast) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  min-width: 280px;
+  max-width: 380px;
+  pointer-events: all;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-left-width: 5px;
+}
+
+.toast-icon {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-message {
+  flex: 1;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .notification-container {
+    top: 74px;
+    right: 10px;
+    left: 10px;
+    max-width: 100%;
+  }
+  .notification-toast {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+}
+
+.notification-toast.success {
+  border-left-color: var(--accent-green);
+}
+
+.notification-toast.info {
+  border-left-color: var(--accent-orange);
+}
+
+.notification-toast.error {
+  border-left-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(255, 42, 54, 0.25);
+  animation: slideInRight var(--transition-fast) forwards, toastShake 0.4s ease;
+}
+
+.notification-toast.warning {
+  border-left-color: var(--accent-orange);
+  box-shadow: 0 4px 20px rgba(255, 145, 0, 0.2);
+  animation: slideInRight var(--transition-fast) forwards, toastShake 0.4s ease;
+}
+
+@keyframes toastShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* PRINTING STYLES (Thermal Paper format) */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #thermal-receipt-print-area, #thermal-receipt-print-area * {
+    visibility: visible;
+  }
+  #thermal-receipt-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm; /* standard thermal receipt width */
+    max-width: 80mm;
+    margin: 0;
+    padding: 2mm;
+    background: white !important;
+    color: black !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

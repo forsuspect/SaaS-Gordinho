@@ -1,0 +1,611 @@
+.kitchen-dashboard-page {
+  background-color: var(--bg-primary);
+  min-height: 90vh;
+}
+
+.kitchen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1.5rem;
+}
+
+.kitchen-title {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.kitchen-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.kitchen-staff-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.staff-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.blink-green-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: blinkGreen 1.5s infinite;
+}
+
+@keyframes blinkGreen {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.staff-logout-btn {
+  background: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.15);
+  color: #ff5252;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: var(--transition-fast);
+}
+
+.staff-logout-btn:hover {
+  background: #ff5252;
+  color: white;
+}
+
+/* Kanban Board Layout */
+.kitchen-kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .kitchen-kanban-board {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.kanban-column {
+  background: rgba(19, 19, 23, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-height: 500px;
+}
+
+.column-header {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.column-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.kanban-column.pending .column-header { border-bottom-color: var(--accent-orange); }
+.kanban-column.preparing .column-header { border-bottom-color: var(--primary); }
+.kanban-column.finished .column-header { border-bottom-color: var(--accent-green); }
+
+.column-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.column-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem 0;
+  font-style: italic;
+}
+
+/* Order Card */
+.kitchen-order-card {
+  padding: 1.2rem;
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--accent-orange);
+  transition: all var(--transition-fast);
+}
+
+.kitchen-order-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+.kitchen-order-card.accent-preparing {
+  border-left-color: var(--primary);
+}
+
+.kitchen-order-card.accent-finished {
+  border-left-color: var(--accent-green);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.order-card-header h4 {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.order-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.badge-type {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.order-card-body {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.client-meta {
+  font-weight: 700;
+  color: white;
+}
+
+.delivery-meta-address {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.order-items-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: rgba(0,0,0,0.1);
+  padding: 0.6rem;
+  border-radius: 6px;
+}
+
+.order-items-list li {
+  line-height: 1.4;
+  border-bottom: 1px dashed rgba(255,255,255,0.03);
+  padding-bottom: 0.3rem;
+}
+
+.order-items-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.item-addon-txt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.item-note {
+  font-size: 0.72rem;
+  color: var(--accent-orange);
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+
+/* Card Actions */
+.order-card-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.action-icon-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-grow: 1;
+  transition: all var(--transition-fast);
+}
+
+.action-icon-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.action-icon-btn.print-btn {
+  flex-grow: 0;
+  width: 40px;
+}
+
+.action-icon-btn.print-btn span {
+  display: none; /* Icon-only on standard grid to preserve width */
+}
+
+.action-icon-btn.confirm-btn:hover {
+  background: rgba(255, 145, 0, 0.08);
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.action-icon-btn.ready-btn:hover {
+  background: rgba(255, 42, 54, 0.08);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.action-icon-btn.delivered-btn:hover {
+  background: rgba(0, 230, 118, 0.08);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+/* --- RECEIPT: hidden on screen, visible only during print --- */
+#thermal-receipt-print-area {
+  display: none;
+}
+
+@media print {
+  /*
+   * FIX: do NOT hide #root — the receipt div lives inside it.
+   * Instead hide only the specific on-screen elements we don't want printed.
+   */
+  .navbar-header,
+  .kitchen-dashboard-page,
+  .notification-container,
+  .footer-section {
+    display: none !important;
+  }
+
+  /* Show and style the thermal receipt */
+  #thermal-receipt-print-area {
+    display: block !important;
+    width: 80mm;
+    max-width: 80mm;
+    background: white;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    padding: 2mm;
+    box-sizing: border-box;
+  }
+  
+  .receipt-align-center {
+    text-align: center;
+  }
+  
+  .receipt-brand {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin: 0 0 2px 0;
+  }
+  
+  .receipt-meta {
+    font-size: 10px;
+    margin: 1px 0;
+  }
+  
+  .receipt-order-title {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 5px 0 2px 0;
+  }
+  
+  .receipt-order-num {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 2px 0;
+  }
+  
+  .divider-line {
+    margin: 4px 0;
+    font-weight: bold;
+  }
+  
+  .receipt-section {
+    margin: 8px 0;
+    text-align: left;
+  }
+  
+  .receipt-section p {
+    margin: 2px 0;
+  }
+  
+  .receipt-items-section {
+    margin: 8px 0;
+  }
+  
+  .receipt-item-row-header {
+    display: flex;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+  }
+  
+  .receipt-item-row {
+    display: flex;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 2px;
+  }
+  
+  .item-row-qty {
+    width: 35px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .item-row-desc-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-right: 5px;
+  }
+  
+  .item-desc-name {
+    font-weight: bold;
+  }
+  
+  .item-desc-addons {
+    font-size: 9px;
+    font-style: italic;
+  }
+  
+  .item-desc-note {
+    font-size: 9px;
+    background: #eee;
+    padding: 1px;
+  }
+  
+  .item-row-total {
+    width: 65px;
+    text-align: right;
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+  
+  .receipt-financial-section {
+    text-align: left;
+    margin: 8px 0;
+  }
+  
+  .financial-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0;
+  }
+  
+  .financial-row.total-large {
+    font-size: 14px;
+    font-weight: bold;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 3px 0;
+    margin: 4px 0;
+  }
+  
+  .receipt-qrcode-label {
+    font-size: 9px;
+    margin-top: 5px;
+    font-weight: bold;
+  }
+  
+  .receipt-qrcode-img {
+    width: 100px;
+    height: 100px;
+    margin: 4px auto;
+    display: block;
+  }
+  
+  .receipt-footer-txt {
+    font-size: 9px;
+    margin: 2px 0;
+    font-weight: bold;
+  }
+}
+
+/* --- KITCHEN REAL-TIME INCOMING ORDER NOTIFICATION MODAL --- */
+.kitchen-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 10, 12, 0.9);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeInAlert 0.3s ease-out;
+}
+
+@keyframes fadeInAlert {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.kitchen-alert-modal {
+  width: 480px;
+  max-width: 90%;
+  border-radius: 24px;
+  border: 2px solid var(--primary);
+  background: rgba(19, 19, 23, 0.95);
+  box-shadow: 0 0 50px rgba(255, 42, 54, 0.4);
+  padding: 2rem;
+  text-align: center;
+  animation: scaleUpAlert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleUpAlert {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.alert-badge-incoming {
+  display: inline-block;
+  background: rgba(255, 42, 54, 0.15);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 1.2rem;
+  border-radius: 99px;
+  margin-bottom: 1.5rem;
+  animation: alertPulse 1.5s infinite;
+}
+
+@keyframes alertPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 42, 54, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 42, 54, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 42, 54, 0); }
+}
+
+.alert-content-box {
+  margin-bottom: 2rem;
+}
+
+.alert-order-number {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.alert-client-name {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.alert-delivery-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+  margin-bottom: 1.5rem;
+}
+
+.alert-items-list-wrap {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 1rem;
+  max-height: 180px;
+  overflow-y: auto;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.alert-items-list-wrap ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alert-items-list-wrap li {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.4rem;
+}
+
+.alert-items-list-wrap li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.alert-items-list-wrap li strong {
+  color: white;
+  margin-right: 0.2rem;
+}
+
+.alert-action-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.alert-action-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.alert-action-btn.alert-accept {
+  box-shadow: var(--neon-glow);
+}
+
+.alert-action-btn.alert-dismiss {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.alert-action-btn.alert-dismiss:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+

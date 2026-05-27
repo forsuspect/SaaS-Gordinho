@@ -1,0 +1,475 @@
+.builder-section {
+  background-color: var(--bg-secondary);
+}
+
+.builder-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 992px) {
+  .builder-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Burger Canvas Preview */
+.builder-preview-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 2rem 2rem 2rem;
+  border-radius: var(--border-radius-lg);
+  min-height: 550px;
+}
+
+.burger-rendering-canvas {
+  width: 100%;
+  max-width: 320px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+/* Burger Layers */
+.burger-layer {
+  width: 250px;
+  border-radius: 4px;
+  transition: all var(--transition-normal);
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Bun Top */
+.bun-top {
+  height: 50px;
+  border-radius: 40px 40px 10px 10px;
+  position: relative;
+  margin-bottom: -4px;
+  z-index: 100;
+}
+
+.sesame-seeds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(ellipse at center, #fff 1px, transparent 2px),
+    radial-gradient(ellipse at center, #fff 1px, transparent 2px),
+    radial-gradient(ellipse at center, #fff 1px, transparent 2px),
+    radial-gradient(ellipse at center, #fff 1px, transparent 2px);
+  background-size: 25px 25px, 20px 20px, 30px 30px, 35px 35px;
+  background-position: 10px 15px, 40px 35px, 90px 25px, 140px 10px;
+  opacity: 0.8;
+}
+
+/* Bun Bottom */
+.bun-bottom {
+  height: 30px;
+  border-radius: 5px 5px 20px 20px;
+  margin-top: -4px;
+  z-index: 10;
+}
+
+/* Meat Patty */
+.layer-meat {
+  height: 38px;
+  border-radius: 12px;
+  margin-top: -5px;
+  position: relative;
+  z-index: 30;
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.layer-meat-double {
+  height: 34px;
+  border-radius: 12px;
+  margin-top: -5px;
+  position: relative;
+  z-index: 25;
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.4);
+}
+
+.cheese-between {
+  height: 6px;
+  border-radius: 2px;
+  margin-top: -3px;
+  z-index: 28;
+}
+
+/* Cheese Melt */
+.layer-cheese {
+  height: 8px;
+  border-radius: 2px;
+  margin-top: -6px;
+  position: relative;
+  z-index: 40;
+}
+
+.cheese-drip {
+  position: absolute;
+  width: 14px;
+  height: 25px;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.cheese-drip.left {
+  left: 30px;
+  top: 4px;
+  transform: rotate(-5deg);
+}
+
+.cheese-drip.right {
+  right: 50px;
+  top: 4px;
+  height: 18px;
+}
+
+/* Lettuce Leaf */
+.layer-lettuce {
+  height: 12px;
+  background-color: #4ade80;
+  border-radius: 20px;
+  width: 260px;
+  margin-top: -2px;
+  z-index: 20;
+  position: relative;
+  clip-path: polygon(
+    0% 50%, 5% 20%, 10% 50%, 15% 15%, 20% 50%, 25% 20%, 30% 50%, 35% 10%, 40% 50%,
+    45% 20%, 50% 50%, 55% 15%, 60% 50%, 65% 20%, 70% 50%, 75% 10%, 80% 50%, 85% 20%,
+    90% 50%, 95% 15%, 100% 50%, 100% 100%, 0% 100%
+  );
+}
+
+/* Tomato Slice */
+.layer-tomato {
+  height: 14px;
+  background-color: #f87171;
+  border-radius: 6px;
+  width: 252px;
+  margin-top: -3px;
+  z-index: 22;
+  border: 2px dashed #b91c1c;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Onion Rings */
+.layer-onion {
+  height: 10px;
+  background: transparent;
+  border: 4px solid #c084fc;
+  border-radius: 50%;
+  width: 248px;
+  margin-top: -3px;
+  z-index: 23;
+  transform: rotateX(75deg);
+}
+
+/* Pickles */
+.layer-pickles {
+  height: 8px;
+  background-color: #859f3d;
+  border-radius: 4px;
+  width: 240px;
+  margin-top: -3px;
+  z-index: 21;
+  border: 2px dotted #4b6f10;
+}
+
+/* Sauce Layer */
+.layer-sauce {
+  height: 8px;
+  background: radial-gradient(circle, #ff2a36 10%, transparent 60%);
+  width: 240px;
+  opacity: 0.85;
+  z-index: 18;
+  margin-top: -3px;
+}
+
+/* Bacon Addon */
+.layer-bacon {
+  height: 10px;
+  background-color: #a7383a;
+  border-radius: 4px;
+  width: 256px;
+  margin-top: -4px;
+  z-index: 45;
+  clip-path: polygon(
+    0 50%, 10% 20%, 20% 80%, 30% 20%, 40% 80%, 50% 20%, 60% 80%, 70% 20%, 80% 80%, 90% 20%, 100% 50%,
+    100% 100%, 0 100%
+  );
+}
+
+/* Egg Addon */
+.layer-egg {
+  height: 14px;
+  background-color: #f3f4f6;
+  border-radius: 20px;
+  width: 256px;
+  margin-top: -4px;
+  z-index: 44;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layer-egg::after {
+  content: '';
+  width: 28px;
+  height: 20px;
+  background-color: #fbbf24;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: absolute;
+}
+
+/* Caramelized Onions */
+.layer-caramelized {
+  height: 8px;
+  background-color: #78350f;
+  border-radius: 4px;
+  width: 240px;
+  margin-top: -3px;
+  z-index: 43;
+  opacity: 0.9;
+}
+
+/* Builder Pricing Card */
+.builder-pricing-card {
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  text-align: center;
+}
+
+.builder-pricing-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+.pricing-total-block {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-total-block span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.pricing-total-block h2 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(255, 42, 54, 0.2);
+}
+
+.builder-add-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 1rem;
+  font-size: 1.05rem;
+}
+
+.prep-time-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+}
+
+/* Right Controls Box */
+.builder-controls {
+  padding: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.builder-control-group {
+  margin-bottom: 2.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1.8rem;
+}
+
+.builder-control-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.control-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+}
+
+@media (max-width: 576px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.option-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1rem;
+  border-radius: var(--border-radius-md);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.3rem;
+  transition: all var(--transition-fast);
+}
+
+.option-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.option-btn.active {
+  background: rgba(255, 42, 54, 0.06);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(255, 42, 54, 0.1);
+}
+
+.option-btn.active span {
+  color: white;
+  font-weight: 700;
+}
+
+.option-price {
+  font-size: 0.78rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.control-checkbox {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--text-muted);
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.option-btn.active .control-checkbox {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.option-btn.active .control-checkbox::after {
+  content: '✓';
+  color: white;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.builder-doneness-row {
+  margin-top: 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.doneness-label {
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.doneness-options {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.doneness-btn {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.doneness-btn:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.doneness-btn.active {
+  border-color: rgba(255, 42, 54, 0.45);
+  background: rgba(255, 42, 54, 0.12);
+  color: var(--primary);
+}
+
+.option-btn {
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.builder-textarea {
+  width: 100%;
+  height: 90px;
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  resize: none;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.builder-textarea:focus {
+  border-color: rgba(255, 42, 54, 0.3);
+  box-shadow: var(--neon-glow);
+}

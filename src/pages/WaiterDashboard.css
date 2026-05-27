@@ -1,0 +1,442 @@
+.waiter-dashboard-page {
+  max-width: 1300px;
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.waiter-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1rem;
+}
+
+.waiter-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.waiter-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.waiter-badge {
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.waiter-badge strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Layout Grid */
+.waiter-layout-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+/* Products Pane */
+.waiter-products-pane {
+  padding: 1.5rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.waiter-categories-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.waiter-categories-nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+.category-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.category-pill:hover,
+.category-pill.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: var(--neon-glow);
+}
+
+/* Products Grid */
+.waiter-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.waiter-product-card {
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.waiter-product-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 42, 54, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.w-prod-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.w-prod-info {
+  padding: 0.8rem;
+}
+
+.w-prod-info h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.w-prod-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  height: 2.8em;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.w-prod-price {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.w-add-btn {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 0.8rem;
+  background: rgba(255, 42, 54, 0.1);
+  border: 1px solid rgba(255, 42, 54, 0.25);
+  color: var(--primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.waiter-product-card:hover .w-add-btn {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--neon-glow);
+}
+
+/* Bill Pane (Comanda) */
+.waiter-bill-pane {
+  padding: 1.5rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-height: 75vh;
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.8rem;
+}
+
+.bill-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.items-count {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  color: var(--text-secondary);
+}
+
+/* Meta Inputs */
+.bill-meta-inputs {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.meta-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meta-input-group label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.meta-input-group input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.meta-input-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(255, 42, 54, 0.15);
+}
+
+/* Bill Items List */
+.bill-items-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-right: 0.25rem;
+  min-height: 150px;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 12px;
+}
+
+.bill-item-info h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+
+.bill-item-info span {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.bill-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.qty-btn {
+  background: transparent;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.qty-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.bill-item-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.bill-item-remove:hover {
+  color: #ff5252;
+}
+
+.bill-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  color: var(--text-muted);
+  gap: 0.8rem;
+  padding: 2rem 0;
+}
+
+.empty-cart-icon {
+  opacity: 0.2;
+}
+
+.bill-empty-state p {
+  font-size: 0.85rem;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+/* Payment Pills & Footer */
+.bill-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-select-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.payment-pills {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pay-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.pay-pill:hover,
+.pay-pill.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: var(--neon-glow);
+}
+
+.bill-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bill-total-row span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.bill-total-val {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+.w-submit-bill-btn {
+  width: 100%;
+  padding: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Tablet & Mobile styles */
+@media (max-width: 900px) {
+  .waiter-layout-grid {
+    grid-template-columns: 1fr;
+  }
+  .waiter-products-pane {
+    max-height: none;
+  }
+  .waiter-bill-pane {
+    max-height: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .waiter-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .waiter-badge {
+    width: 100%;
+    text-align: center;
+  }
+  .bill-meta-inputs {
+    flex-direction: column;
+  }
+  .payment-pills {
+    flex-wrap: wrap;
+  }
+  .pay-pill {
+    flex: calc(50% - 0.2rem);
+  }
+}
