@@ -456,75 +456,78 @@ export default function AdminDashboard() {
                               </>
                             )}
                             
-                            <div className="stock-toggle-wrapper">
-                              <label className="switch">
-                                <input 
-                                  type="checkbox" 
-                                  checked={prod.in_stock} 
-                                  onChange={(e) => updateProductStock(prod.id, e.target.checked)} 
-                                />
-                                <span className="slider round"></span>
-                              </label>
-                              <span className={`stock-status ${prod.in_stock ? 'in' : 'out'}`}>
-                                {prod.in_stock ? 'Em Estoque' : 'Indisponível'}
-                              </span>
-                            </div>
-                          </div>
+                            {/* Reorganized bottom row containing stock switch and edit/delete actions */}
+                            <div className="catalog-row-bottom-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.8rem', marginTop: '0.6rem', width: '100%' }}>
+                              <div className="stock-toggle-wrapper" style={{ margin: 0 }}>
+                                <label className="switch">
+                                  <input 
+                                    type="checkbox" 
+                                    checked={prod.in_stock} 
+                                    onChange={(e) => updateProductStock(prod.id, e.target.checked)} 
+                                  />
+                                  <span className="slider round"></span>
+                                </label>
+                                <span className={`stock-status ${prod.in_stock ? 'in' : 'out'}`}>
+                                  {prod.in_stock ? 'Em Estoque' : 'Indisponível'}
+                                </span>
+                              </div>
 
-                          <div className="catalog-row-actions">
-                            {isEditing ? (
-                              <>
-                                <button
+                              <div className="catalog-row-actions" style={{ display: 'flex', gap: '0.4rem', margin: 0, padding: 0, border: 'none' }}>
+                                {isEditing ? (
+                                  <>
+                                    <button
+                                      onClick={() => {
+                                        saveProduct({
+                                          ...prod,
+                                          name: editingProduct.name,
+                                          price: parseFloat(editingProduct.price),
+                                          description: editingProduct.description
+                                        });
+                                        setEditingProduct(null);
+                                      }}
+                                      className="catalog-action-btn save"
+                                      title="Salvar alterações"
+                                    >
+                                      <CheckCircle size={15} />
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingProduct(null)}
+                                      className="catalog-action-btn cancel-edit"
+                                      title="Cancelar edição"
+                                    >
+                                      ✕
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    onClick={() => setEditingProduct({
+                                      id: prod.id,
+                                      name: prod.name,
+                                      price: prod.price,
+                                      description: prod.description || ''
+                                    })}
+                                    className="catalog-action-btn edit"
+                                    title="Editar produto"
+                                  >
+                                    <Edit3 size={15} />
+                                  </button>
+                                )}
+                                <button 
                                   onClick={() => {
-                                    saveProduct({
-                                      ...prod,
-                                      name: editingProduct.name,
-                                      price: parseFloat(editingProduct.price),
-                                      description: editingProduct.description
+                                    setDeleteConfirm({
+                                      isOpen: true,
+                                      itemId: prod.id,
+                                      itemName: prod.name,
+                                      itemType: 'product'
                                     });
-                                    setEditingProduct(null);
-                                  }}
-                                  className="catalog-action-btn save"
-                                  title="Salvar alterações"
+                                  }} 
+                                  className="catalog-delete-btn"
+                                  title="Excluir produto"
                                 >
-                                  <CheckCircle size={15} />
+                                  <Trash2 size={16} />
                                 </button>
-                                <button
-                                  onClick={() => setEditingProduct(null)}
-                                  className="catalog-action-btn cancel-edit"
-                                  title="Cancelar edição"
-                                >
-                                  ✕
-                                </button>
-                              </>
-                            ) : (
-                              <button
-                                onClick={() => setEditingProduct({
-                                  id: prod.id,
-                                  name: prod.name,
-                                  price: prod.price,
-                                  description: prod.description || ''
-                                })}
-                                className="catalog-action-btn edit"
-                                title="Editar produto"
-                              >
-                                <Edit3 size={15} />
-                              </button>
-                            )}
-                            <button 
-                              onClick={() => {
-                                setDeleteConfirm({
-                                  isOpen: true,
-                                  itemId: prod.id,
-                                  itemName: prod.name,
-                                  itemType: 'product'
-                                });
-                              }} 
-                              className="catalog-delete-btn"
-                              title="Excluir produto"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       );
