@@ -809,6 +809,7 @@ input:checked + .slider:before {
   margin-top: 0.5rem;
   background: linear-gradient(90deg, #ff4c4c, #ff7b7b);
   -webkit-background-clip: text;
+  background-clip: text; /* Standard property for cross-browser spec compliance */
   -webkit-text-fill-color: transparent;
 }
 

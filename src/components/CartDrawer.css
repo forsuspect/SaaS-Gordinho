@@ -641,3 +641,44 @@
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.16);
 }
+
+@media (max-width: 576px) {
+  .cart-drawer-panel {
+    max-width: 100% !important;
+    height: 100dvh !important; /* Perfect dynamic viewport height on mobile web */
+  }
+  
+  .address-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+  
+  .form-group.span-6,
+  .form-group.span-4,
+  .form-group.span-3,
+  .form-group.span-2 {
+    grid-column: span 1 / span 1 !important;
+  }
+  
+  .payment-options-grid,
+  .delivery-choice-buttons {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+  }
+  
+  .cart-items-container {
+    padding: 1rem !important;
+  }
+  
+  .checkout-scrollable {
+    padding: 1rem !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .pix-step-container {
+    padding: 1.2rem 1rem !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
