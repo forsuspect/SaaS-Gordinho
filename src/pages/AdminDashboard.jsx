@@ -456,8 +456,8 @@ export default function AdminDashboard() {
                               </>
                             )}
                             
-                            {/* Reorganized bottom row containing stock switch and edit/delete actions */}
-                            <div className="catalog-row-bottom-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.8rem', marginTop: '0.6rem', width: '100%' }}>
+                            {/* Stock toggle + action buttons grouped together */}
+                            <div className="catalog-row-bottom-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginTop: '0.6rem', width: '100%' }}>
                               <div className="stock-toggle-wrapper" style={{ margin: 0 }}>
                                 <label className="switch">
                                   <input 
@@ -472,7 +472,7 @@ export default function AdminDashboard() {
                                 </span>
                               </div>
 
-                              <div className="catalog-row-actions" style={{ display: 'flex', gap: '0.4rem', margin: 0, padding: 0, border: 'none' }}>
+                              <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
                                 {isEditing ? (
                                   <>
                                     <button
@@ -488,7 +488,7 @@ export default function AdminDashboard() {
                                       className="catalog-action-btn save"
                                       title="Salvar alterações"
                                     >
-                                      <CheckCircle size={15} />
+                                      <CheckCircle size={18} />
                                     </button>
                                     <button
                                       onClick={() => setEditingProduct(null)}
@@ -509,7 +509,7 @@ export default function AdminDashboard() {
                                     className="catalog-action-btn edit"
                                     title="Editar produto"
                                   >
-                                    <Edit3 size={15} />
+                                    <Edit3 size={18} />
                                   </button>
                                 )}
                                 <button 
@@ -524,7 +524,7 @@ export default function AdminDashboard() {
                                   className="catalog-delete-btn"
                                   title="Excluir produto"
                                 >
-                                  <Trash2 size={16} />
+                                  <Trash2 size={18} />
                                 </button>
                               </div>
                             </div>

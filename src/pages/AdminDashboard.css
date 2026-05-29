@@ -4,7 +4,7 @@
 }
 
 .admin-container {
-  max-width: 1100px;
+  max-width: 1350px;
   margin: 0 auto;
   padding-top: 20px;
 }
@@ -189,11 +189,82 @@
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+  .product-form-box {
+    min-width: auto !important;
+  }
 }
 
 .product-form-box {
   padding: 2.2rem;
   border-radius: var(--border-radius-lg);
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  min-width: 460px; /* Crucial: Ensures the form is spacious and inputs are never squished! */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.span-6 {
+  grid-column: span 6;
+}
+
+.form-group.span-3 {
+  grid-column: span 3;
+}
+
+.form-group.span-2 {
+  grid-column: span 2;
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.form-group input, 
+.form-group select {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  color: white;
+  outline: none;
+  font-family: inherit;
+  transition: all var(--transition-fast) ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--primary);
+  background: rgba(255, 42, 54, 0.02);
+  box-shadow: 0 0 12px rgba(255, 42, 54, 0.2);
+}
+
+@media (max-width: 576px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-group.span-6,
+  .form-group.span-3,
+  .form-group.span-2 {
+    grid-column: span 1;
+  }
 }
 
 .product-form-box h3, .products-list-box h3 {
@@ -240,6 +311,9 @@
 .products-list-box {
   padding: 2.2rem;
   border-radius: var(--border-radius-lg);
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .catalog-grid {
@@ -259,6 +333,7 @@
   transition: all var(--transition-fast);
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  /* No overflow:hidden — use flex min-width:0 on children to constrain */
 }
 
 .catalog-row:hover {
@@ -285,9 +360,10 @@
 .catalog-row-info {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0; /* flex-grow:1, flex-shrink:1, flex-basis:0 — ensures it shrinks properly */
   gap: 0.25rem;
-  min-width: 0;
+  min-width: 0; /* Critical: allows flexbox to shrink below its content width */
+  overflow: hidden; /* Clip only this inner section, not the whole card */
 }
 
 .catalog-row-info h4 {
@@ -325,29 +401,30 @@
 }
 
 .catalog-action-btn {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   transition: all var(--transition-fast);
   border: 1px solid;
 }
 
 .catalog-action-btn.edit {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: var(--text-secondary);
+  background: rgba(255, 193, 7, 0.06);
+  border-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
 }
 
 .catalog-action-btn.edit:hover {
-  background: rgba(255, 200, 0, 0.1);
-  border-color: rgba(255, 200, 0, 0.25);
-  color: #ffc800;
+  background: #ffc107;
+  color: #0a0a0b;
+  box-shadow: 0 0 12px rgba(255, 193, 7, 0.35);
+  transform: translateY(-2px);
 }
 
 .catalog-action-btn.save {
@@ -359,37 +436,43 @@
 .catalog-action-btn.save:hover {
   background: #00e676;
   color: #0a0a0b;
+  box-shadow: 0 0 12px rgba(0, 230, 118, 0.35);
+  transform: translateY(-2px);
 }
 
 .catalog-action-btn.cancel-edit {
-  background: rgba(255, 76, 76, 0.06);
-  border-color: rgba(255, 76, 76, 0.15);
-  color: var(--text-muted);
-}
-
-.catalog-action-btn.cancel-edit:hover {
-  background: rgba(255, 76, 76, 0.15);
+  background: rgba(255, 76, 76, 0.08);
+  border-color: rgba(255, 76, 76, 0.2);
   color: #ff4c4c;
 }
 
+.catalog-action-btn.cancel-edit:hover {
+  background: #ff4c4c;
+  color: white;
+  box-shadow: 0 0 12px rgba(255, 76, 76, 0.35);
+  transform: translateY(-2px);
+}
+
 .catalog-delete-btn {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 82, 82, 0.05);
-  border: 1px solid rgba(255, 82, 82, 0.1);
-  color: var(--text-muted);
+  background: rgba(255, 42, 54, 0.06);
+  border: 1px solid rgba(255, 42, 54, 0.2);
+  color: #ff2a36;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all var(--transition-fast);
   border-radius: 8px;
 }
 
 .catalog-delete-btn:hover {
-  background: rgba(255, 82, 82, 0.15);
-  border-color: rgba(255, 82, 82, 0.3);
-  color: #ff5252;
+  background: #ff2a36;
+  color: white;
+  border-color: #ff2a36;
+  box-shadow: 0 0 12px rgba(255, 42, 54, 0.35);
+  transform: translateY(-2px);
 }
 
 .catalog-inline-edit-fields {
