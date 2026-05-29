@@ -4,17 +4,46 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey) 
+// Only create the client if the key looks like a valid JWT (starts with "eyJ") or the new Supabase publishable key format
+const isValidKey = supabaseAnonKey && (supabaseAnonKey.startsWith('eyJ') || supabaseAnonKey.startsWith('sb_publishable_'));
+
+let supabaseClient = (supabaseUrl && isValidKey)
+  ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
+
+// One-time health check — if the first Supabase call fails (401/403), disable
+// the client permanently so the browser never makes further failing requests.
+let supabaseChecked = false;
+async function getValidSupabase() {
+  if (!supabaseClient) return null;
+  if (supabaseChecked) return supabaseClient;
+
+  try {
+    // Light probe: try to read from a table (categories is small)
+    const { error } = await supabaseClient.from('categories').select('id').limit(1);
+    supabaseChecked = true;
+    if (error) {
+      // Auth or table-missing error → disable Supabase, use localStorage only
+      supabaseClient = null;
+      return null;
+    }
+    return supabaseClient;
+  } catch (_) {
+    supabaseClient = null;
+    supabaseChecked = true;
+    return null;
+  }
+}
+
+// Export for external usage (auth, etc.)
+export { supabaseClient as supabase };
 
 // Initial Seed Data
 const DEFAULT_CATEGORIES = [
-  { id: 'cat-combos', name: 'Combos Especiais', slug: 'combos', icon: 'Sparkles' },
-  { id: 'cat-burgers', name: 'Hambúrgueres Premium', slug: 'burgers', icon: 'Flame' },
-  { id: 'cat-portions', name: 'Acompanhamentos', slug: 'portions', icon: 'Utensils' },
-  { id: 'cat-drinks', name: 'Bebidas Geladas', slug: 'drinks', icon: 'CupSoda' },
-  { id: 'cat-desserts', name: 'Sobremesas', slug: 'desserts', icon: 'IceCream' }
+  { id: 'cat-burgers', name: 'Hambúrguer', slug: 'hamburguer', icon: 'Flame' },
+  { id: 'cat-drinks', name: 'Bebidas', slug: 'bebidas', icon: 'CupSoda' },
+  { id: 'cat-portions', name: 'Batatas', slug: 'batatas', icon: 'Utensils' },
+  { id: 'cat-others', name: 'Demais itens', slug: 'demais', icon: 'Sparkles' }
 ];
 
 const DEFAULT_PRODUCTS = [
@@ -25,7 +54,7 @@ const DEFAULT_PRODUCTS = [
     description: 'O clássico supremo: Double Cheeseburger 150g, Batata Frita Média e Refrigerante Lata gelado.',
     price: 44.90,
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
-    category_id: 'cat-combos',
+    category_id: 'cat-burgers',
     stock: 50,
     sizes: [
       { name: 'Médio', priceModifier: 0 },
@@ -44,7 +73,7 @@ const DEFAULT_PRODUCTS = [
     description: 'Para os apaixonados por bacon: Cheddar Bacon Burger 150g, Batata Rústica e Milkshake Creme 400ml.',
     price: 49.90,
     image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80',
-    category_id: 'cat-combos',
+    category_id: 'cat-burgers',
     stock: 45,
     sizes: [
       { name: 'Padrão', priceModifier: 0 }
@@ -222,7 +251,7 @@ const DEFAULT_PRODUCTS = [
     description: 'Brownie de chocolate belga meio amargo bem molhadinho, servido morno com uma generosa bola de sorvete de baunilha e calda de chocolate.',
     price: 18.90,
     image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
-    category_id: 'cat-desserts',
+    category_id: 'cat-others',
     stock: 40,
     sizes: [
       { name: 'Padrão', priceModifier: 0 }
@@ -237,7 +266,7 @@ const DEFAULT_PRODUCTS = [
     description: 'Milkshake ultra cremoso de baunilha batido com Ovomaltine crocante e cobertura de chocolate.',
     price: 17.90,
     image: 'https://images.unsplash.com/photo-1579954115545-a95591f28bfc?auto=format&fit=crop&w=600&q=80',
-    category_id: 'cat-desserts',
+    category_id: 'cat-others',
     stock: 60,
     sizes: [
       { name: '400ml', priceModifier: 0 }
@@ -350,9 +379,10 @@ const DEFAULT_ORDERS = [
 
 // Helper to initialize local storage
 function initializeLocalStorage() {
-  if (!localStorage.getItem('bh_categories')) {
-    localStorage.setItem('bh_categories', JSON.stringify(DEFAULT_CATEGORIES));
-  }
+  // Always write the latest DEFAULT_CATEGORIES so the fallback is never stale.
+  // Supabase data will overwrite this on the first successful fetch.
+  localStorage.setItem('bh_categories', JSON.stringify(DEFAULT_CATEGORIES));
+
   if (!localStorage.getItem('bh_products')) {
     localStorage.setItem('bh_products', JSON.stringify(DEFAULT_PRODUCTS));
   }
@@ -397,12 +427,37 @@ if (typeof window !== 'undefined') {
 export const dbService = {
   // --- CATEGORIES ---
   async getCategories() {
-    if (supabase) {
-      const { data, error } = await supabase.from('categories').select('*');
-      if (!error) return data;
-      console.warn('Supabase categories error, using fallback:', error);
+    const sortCategories = (list) => {
+      const order = ['cat-burgers', 'cat-portions', 'cat-drinks', 'cat-others'];
+      return [...list].sort((a, b) => {
+        const indexA = order.indexOf(a.id);
+        const indexB = order.indexOf(b.id);
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      });
+    };
+
+    const sb = await getValidSupabase();
+    const localCats = JSON.parse(localStorage.getItem('bh_categories') || '[]');
+    if (sb) {
+      try {
+        const { data, error } = await sb.from('categories').select('*');
+        if (!error && data) {
+          const merged = [...data];
+          for (const localC of localCats) {
+            if (!merged.some(c => c.id === localC.id)) {
+              merged.push(localC);
+            }
+          }
+          const sorted = sortCategories(merged);
+          localStorage.setItem('bh_categories', JSON.stringify(sorted));
+          return sorted;
+        }
+      } catch (_) { /* silent fallback */ }
     }
-    return JSON.parse(localStorage.getItem('bh_categories') || '[]');
+    return sortCategories(localCats);
   },
 
   async saveCategory(category) {
@@ -417,8 +472,9 @@ export const dbService = {
     }
     localStorage.setItem('bh_categories', JSON.stringify(list));
 
-    if (supabase) {
-      await supabase.from('categories').upsert(category);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('categories').upsert(category); } catch (_) {}
     }
     return category;
   },
@@ -428,21 +484,40 @@ export const dbService = {
     const filtered = list.filter(c => c.id !== id);
     localStorage.setItem('bh_categories', JSON.stringify(filtered));
 
-    if (supabase) {
-      await supabase.from('categories').delete().eq('id', id);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('categories').delete().eq('id', id); } catch (_) {}
     }
     return true;
   },
 
   // --- PRODUCTS ---
   async getProducts() {
-    if (supabase) {
+    const sb = await getValidSupabase();
+    const localProducts = JSON.parse(localStorage.getItem('bh_products') || '[]');
+    if (sb) {
       try {
-        const { data, error } = await supabase.from('products').select('*');
-        if (!error && data) return data;
+        const { data, error } = await sb.from('products').select('*');
+        if (!error && data) {
+          let merged = [...data];
+          if (merged.length === 0) {
+            await sb.from('products').upsert(DEFAULT_PRODUCTS);
+            const { data: fresh } = await sb.from('products').select('*');
+            if (fresh && fresh.length > 0) {
+              merged = fresh;
+            }
+          }
+          for (const localP of localProducts) {
+            if (!merged.some(p => p.id === localP.id)) {
+              merged.push(localP);
+            }
+          }
+          localStorage.setItem('bh_products', JSON.stringify(merged));
+          return merged;
+        }
       } catch (_) { /* silent fallback */ }
     }
-    return JSON.parse(localStorage.getItem('bh_products') || '[]');
+    return localProducts;
   },
 
   async saveProduct(product) {
@@ -457,8 +532,9 @@ export const dbService = {
     }
     localStorage.setItem('bh_products', JSON.stringify(list));
 
-    if (supabase) {
-      await supabase.from('products').upsert(product);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('products').upsert(product); } catch (_) {}
     }
     return product;
   },
@@ -468,17 +544,21 @@ export const dbService = {
     const filtered = list.filter(p => p.id !== id);
     localStorage.setItem('bh_products', JSON.stringify(filtered));
 
-    if (supabase) {
-      await supabase.from('products').delete().eq('id', id);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('products').delete().eq('id', id); } catch (_) {}
     }
     return true;
   },
 
   // --- USERS ---
   async getUsers() {
-    if (supabase) {
-      const { data, error } = await supabase.from('profiles').select('*');
-      if (!error) return data;
+    const sb = await getValidSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb.from('profiles').select('*');
+        if (!error && data) return data;
+      } catch (_) { /* silent fallback */ }
     }
     return JSON.parse(localStorage.getItem('bh_users') || '[]');
   },
@@ -495,20 +575,24 @@ export const dbService = {
     }
     localStorage.setItem('bh_users', JSON.stringify(list));
 
-    if (supabase) {
-      await supabase.from('profiles').upsert(user);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('profiles').upsert(user); } catch (_) {}
     }
     return user;
   },
 
   async login(email, password) {
     // 1. Try Supabase Auth first if active
-    if (supabase) {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (!error && data?.user) {
-        const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
-        if (profile) return profile;
-      }
+    const sb = await getValidSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (!error && data?.user) {
+          const { data: profile } = await sb.from('profiles').select('*').eq('id', data.user.id).single();
+          if (profile) return profile;
+        }
+      } catch (_) { /* fall through to local */ }
     }
     // 2. Local Fallback
     const users = JSON.parse(localStorage.getItem('bh_users') || '[]');
@@ -521,16 +605,38 @@ export const dbService = {
 
   // --- ORDERS ---
   async getOrders() {
-    if (supabase) {
+    const sb = await getValidSupabase();
+    if (sb) {
       try {
-        const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-        if (!error && data) return data;
+        const { data, error } = await sb.from('orders').select('*').order('created_at', { ascending: false });
+        if (!error && data) {
+          // Normalize and restore waiter_name from delivery_address if needed
+          return data.map(o => ({
+            ...o,
+            waiter_name: o.waiter_name || o.delivery_address?.waiter_name || ''
+          }));
+        }
       } catch (_) { /* silent fallback */ }
     }
     return JSON.parse(localStorage.getItem('bh_orders') || '[]');
   },
 
   async saveOrder(order) {
+    // Copy waiter_name inside delivery_address object to preserve it on Supabase JSONB
+    if (order.waiter_name) {
+      if (typeof order.delivery_address === 'object' && order.delivery_address !== null) {
+        order.delivery_address = {
+          ...order.delivery_address,
+          waiter_name: order.waiter_name
+        };
+      } else {
+        order.delivery_address = {
+          street: typeof order.delivery_address === 'string' ? order.delivery_address : 'Balcão/Salão',
+          waiter_name: order.waiter_name
+        };
+      }
+    }
+
     const list = JSON.parse(localStorage.getItem('bh_orders') || '[]');
     const index = list.findIndex(o => o.id === order.id);
     
@@ -545,17 +651,23 @@ export const dbService = {
     }
     localStorage.setItem('bh_orders', JSON.stringify(list));
 
-    if (supabase) {
-      await supabase.from('orders').upsert(order);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try {
+        // Strip waiter_name from the root object when saving to Supabase to prevent PGRST100 "column does not exist" 400 Bad Request
+        const { waiter_name, ...dbOrder } = order;
+        await sb.from('orders').upsert(dbOrder);
+      } catch (_) {}
     }
     return order;
   },
 
   // --- SETTINGS ---
   async getSettings() {
-    if (supabase) {
+    const sb = await getValidSupabase();
+    if (sb) {
       try {
-        const { data, error } = await supabase.from('settings').select('*').single();
+        const { data, error } = await sb.from('settings').select('*').single();
         if (!error && data) return data;
       } catch (_) { /* silent fallback */ }
     }
@@ -564,17 +676,19 @@ export const dbService = {
 
   async saveSettings(settings) {
     localStorage.setItem('bh_settings', JSON.stringify(settings));
-    if (supabase) {
-      await supabase.from('settings').upsert({ id: 1, ...settings });
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('settings').upsert({ id: 1, ...settings }); } catch (_) {}
     }
     return settings;
   },
 
   // --- COUPONS ---
   async getCoupons() {
-    if (supabase) {
+    const sb = await getValidSupabase();
+    if (sb) {
       try {
-        const { data, error } = await supabase.from('coupons').select('*');
+        const { data, error } = await sb.from('coupons').select('*');
         if (!error && data) return data;
       } catch (_) { /* silent fallback */ }
     }
@@ -592,8 +706,9 @@ export const dbService = {
     }
     localStorage.setItem('bh_coupons', JSON.stringify(list));
 
-    if (supabase) {
-      await supabase.from('coupons').upsert(coupon);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('coupons').upsert(coupon); } catch (_) {}
     }
     return coupon;
   },
@@ -603,8 +718,9 @@ export const dbService = {
     const filtered = list.filter(c => c.code.toUpperCase() !== code.toUpperCase());
     localStorage.setItem('bh_coupons', JSON.stringify(filtered));
 
-    if (supabase) {
-      await supabase.from('coupons').delete().eq('code', code);
+    const sb = await getValidSupabase();
+    if (sb) {
+      try { await sb.from('coupons').delete().eq('code', code); } catch (_) {}
     }
     return true;
   }

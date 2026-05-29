@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { X, Plus, Minus, Trash2, Tag, MapPin, CreditCard, ChevronRight, DollarSign, ArrowRight } from 'lucide-react';
@@ -45,6 +45,17 @@ export default function CartDrawer() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
+
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 

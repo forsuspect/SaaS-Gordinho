@@ -5,7 +5,14 @@ import './ProductModal.css';
 
 export default function ProductModal({ product, onClose }) {
   const { addToCart } = useApp();
-  
+
+  useEffect(() => {
+    document.body.classList.add('modal-open');
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
+
   if (!product) return null;
 
   // Customizer States

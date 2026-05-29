@@ -115,7 +115,7 @@ export default function KitchenDashboard() {
           <div className="kitchen-staff-actions">
             <div className="staff-indicator glass">
               <span className="blink-green-dot"></span>
-              <span>Cozinha Online • {user.name}</span>
+              <span>Cozinha Online</span>
             </div>
             
             <button onClick={() => { navigate('/login'); logout(); }} className="staff-logout-btn" title="Desconectar">
@@ -143,7 +143,12 @@ export default function KitchenDashboard() {
                   </div>
                   
                   <div className="order-card-body">
-                    <p className="client-meta">👤 {order.client_name} • {order.delivery_type === 'delivery' ? '🛵 Entrega' : '🏪 Retirada'}</p>
+                    <p className="client-meta">👤 {order.client_name} • {order.delivery_type === 'delivery' ? '🛵 Entrega' : '🏪 Atendimento Local'}</p>
+                    {order.waiter_name && (
+                      <p className="waiter-meta" style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.2rem', marginBottom: '0.4rem' }}>
+                        💁 Atendente: <strong>{order.waiter_name}</strong>
+                      </p>
+                    )}
                     
                     <ul className="order-items-list">
                       {order.items.map((item, idx) => (
@@ -190,7 +195,12 @@ export default function KitchenDashboard() {
                   </div>
 
                   <div className="order-card-body">
-                    <p className="client-meta">👤 {order.client_name} • {order.delivery_type === 'delivery' ? '🛵 Entrega' : '🏪 Retirada'}</p>
+                    <p className="client-meta">👤 {order.client_name} • {order.delivery_type === 'delivery' ? '🛵 Entrega' : '🏪 Atendimento Local'}</p>
+                    {order.waiter_name && (
+                      <p className="waiter-meta" style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.2rem', marginBottom: '0.4rem' }}>
+                        💁 Atendente: <strong>{order.waiter_name}</strong>
+                      </p>
+                    )}
 
                     <ul className="order-items-list">
                       {order.items.map((item, idx) => (
@@ -241,6 +251,11 @@ export default function KitchenDashboard() {
 
                   <div className="order-card-body">
                     <p className="client-meta">👤 {order.client_name} ({order.client_phone})</p>
+                    {order.waiter_name && (
+                      <p className="waiter-meta" style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.2rem', marginBottom: '0.4rem' }}>
+                        💁 Atendente: <strong>{order.waiter_name}</strong>
+                      </p>
+                    )}
                     
                     {order.delivery_type === 'delivery' && order.delivery_address && (
                       <p className="delivery-meta-address">📍 {order.delivery_address.street}, {order.delivery_address.number}</p>
@@ -287,6 +302,9 @@ export default function KitchenDashboard() {
             <p><strong>CLIENTE:</strong> {printOrder.client_name}</p>
             <p><strong>FONE:</strong> {printOrder.client_phone}</p>
             <p><strong>TIPO:</strong> {printOrder.delivery_type === 'delivery' ? 'ENTREGA À DOMICÍLIO' : 'RETIRADA NA LOJA'}</p>
+            {printOrder.waiter_name && (
+              <p><strong>ATENDENTE:</strong> {printOrder.waiter_name.toUpperCase()}</p>
+            )}
             
             {printOrder.delivery_type === 'delivery' && printOrder.delivery_address && (
               <p>

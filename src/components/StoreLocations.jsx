@@ -93,6 +93,7 @@ export default function StoreLocations() {
   const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const onTouchEnd   = (e) => {
     if (touchStartX.current === null) return;
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
     const dx = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(dx) > 40) dx > 0 ? next() : prev();
     touchStartX.current = null;
@@ -128,7 +129,7 @@ export default function StoreLocations() {
             ref={trackRef}
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
-            style={{ transform: `translateX(calc(-${active * 100}% - ${active * 1.25}rem))` }}
+            style={{ '--active-index': active }}
           >
             {stores.map(s => (
               <div key={s.id} className="loc-carousel-slide">

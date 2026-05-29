@@ -148,6 +148,12 @@ export default function ClientPortal() {
                       <p className="tracker-desc-text">📢 {statusInfo.desc}</p>
                       
                       <div className="tracker-details-list">
+                        {order.waiter_name && (
+                          <div className="tracker-waiter-info" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.8rem' }}>
+                            <span>💁 Atendido por:</span>
+                            <strong>{order.waiter_name}</strong>
+                          </div>
+                        )}
                         <h4>Itens Pedidos:</h4>
                         <ul>
                           {order.items.map((item, idx) => (

@@ -55,6 +55,12 @@
   text-decoration: none;
 }
 
+.navbar-logo > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
 .navbar-logo .brand-logo {
   width: 40px;
   height: 40px;
@@ -66,6 +72,8 @@
 .red-text {
   color: var(--primary);
   text-shadow: 0 0 8px rgba(255, 42, 54, 0.35);
+  display: inline;
+  line-height: inherit;
 }
 
 /* ---- Desktop Nav Links ---- */

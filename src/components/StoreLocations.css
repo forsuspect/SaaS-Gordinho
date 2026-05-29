@@ -229,6 +229,13 @@
   gap: 1.25rem;
   transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
+  transform: translateX(calc(-1 * var(--active-index, 0) * (100% - 2.5rem + 1.25rem)));
+}
+
+@media (max-width: 480px) {
+  .loc-carousel-track {
+    transform: translateX(calc(-1 * var(--active-index, 0) * (100% - 1.5rem + 1.25rem)));
+  }
 }
 
 .loc-carousel-slide {

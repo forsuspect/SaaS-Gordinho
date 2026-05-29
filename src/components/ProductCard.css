@@ -41,6 +41,7 @@
   position: relative;
   overflow: hidden;
   background: #101014;
+  max-height: 200px;
 }
 
 .product-image {

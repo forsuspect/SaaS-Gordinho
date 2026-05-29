@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="footer-brand-box">
           <div className="footer-logo">
             <img src="/logo.png" alt="Gordinho Burguer" className="brand-logo brand-logo-footer" />
-            <span>GORDINHO <span className="red-text">BURGUER</span></span>
+            <span>Gordinho <span className="red-text">Burguer</span></span>
           </div>
           
           <p className="footer-about-text">

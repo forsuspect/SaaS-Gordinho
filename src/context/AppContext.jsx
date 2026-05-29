@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { dbService } from '../services/db';
+import { CheckCircle2, XCircle, AlertTriangle, Info } from 'lucide-react';
 
 const AppContext = createContext();
 
@@ -73,20 +74,40 @@ export function AppProvider({ children }) {
 
     // 2. Fetch Initial Database Data
     async function loadData() {
+      // Instant render from localStorage cache
       try {
-        const catList = await dbService.getCategories();
-        const prodList = await dbService.getProducts();
-        const config = await dbService.getSettings();
-        const orderList = await dbService.getOrders();
-        const couponList = await dbService.getCoupons();
+        const localCats = JSON.parse(localStorage.getItem('bh_categories') || '[]');
+        const localProds = JSON.parse(localStorage.getItem('bh_products') || '[]');
+        const localConfig = JSON.parse(localStorage.getItem('bh_settings') || '{}');
+        const localOrders = JSON.parse(localStorage.getItem('bh_orders') || '[]');
+        const localCoupons = JSON.parse(localStorage.getItem('bh_coupons') || '[]');
+
+        if (localCats.length > 0) setCategories(localCats);
+        if (localProds.length > 0) setProducts(localProds);
+        if (localConfig && Object.keys(localConfig).length > 0) setSettings(localConfig);
+        if (localOrders.length > 0) setOrders(localOrders);
+        if (localCoupons.length > 0) setCoupons(localCoupons);
+      } catch (err) {
+        console.error('Instant load error', err);
+      }
+
+      // Parallel fetch from database to update/sync in background
+      try {
+        const [catList, prodList, config, orderList, couponList] = await Promise.all([
+          dbService.getCategories(),
+          dbService.getProducts(),
+          dbService.getSettings(),
+          dbService.getOrders(),
+          dbService.getCoupons()
+        ]);
 
         setCategories(catList);
         setProducts(prodList);
         setSettings(config);
         setOrders(orderList);
         setCoupons(couponList);
-      } catch (err) {
-        console.error('Error seeding initial context:', err);
+      } catch (_) {
+        // Silent: localStorage fallback already loaded
       }
     }
     loadData();
@@ -301,7 +322,6 @@ export function AppProvider({ children }) {
       return newOrder;
     } catch (err) {
       showToast('Erro ao enviar pedido.', 'info');
-      console.error(err);
       throw err;
     }
   };
@@ -319,8 +339,12 @@ export function AppProvider({ children }) {
       showToast(`Status do pedido #${target.order_number} atualizado!`, 'success');
     } catch (err) {
       showToast('Erro ao atualizar pedido.', 'info');
-      console.error(err);
     }
+  };
+
+  const refreshOrders = async () => {
+    const list = await dbService.getOrders();
+    setOrders(list);
   };
 
   // --- CRUD ACTIONS FOR ADMIN ---
@@ -338,6 +362,19 @@ export function AppProvider({ children }) {
     await dbService.saveProduct(product);
     await refreshProducts();
     showToast('Produto salvo com sucesso!', 'success');
+  };
+
+  const updateProductStock = async (id, inStock) => {
+    try {
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+      const updated = { ...prod, in_stock: inStock };
+      await dbService.saveProduct(updated);
+      await refreshProducts();
+      showToast(`Estoque de ${prod.name} atualizado!`, 'success');
+    } catch (_) {
+      showToast('Erro ao atualizar estoque.', 'error');
+    }
   };
 
   const deleteProduct = async (id) => {
@@ -412,13 +449,15 @@ export function AppProvider({ children }) {
       placeOrder,
       updateOrderStatus,
       saveProduct,
+      updateProductStock,
       deleteProduct,
       saveCategory,
       deleteCategory,
       saveSettings,
       saveCoupon,
       deleteCoupon,
-      showToast
+      showToast,
+      refreshOrders
     }}>
       {children}
       
@@ -427,10 +466,10 @@ export function AppProvider({ children }) {
         {toasts.map(toast => (
           <div key={toast.id} className={`notification-toast ${toast.type}`}>
             <span className="toast-icon">
-              {toast.type === 'success' && '🟢'}
-              {toast.type === 'error' && '🔴'}
-              {toast.type === 'warning' && '🟡'}
-              {toast.type === 'info' && '🔵'}
+              {toast.type === 'success' && <CheckCircle2 size={18} />}
+              {toast.type === 'error' && <XCircle size={18} />}
+              {toast.type === 'warning' && <AlertTriangle size={18} />}
+              {toast.type === 'info' && <Info size={18} />}
             </span>
             <span className="toast-message">{toast.message}</span>
           </div>

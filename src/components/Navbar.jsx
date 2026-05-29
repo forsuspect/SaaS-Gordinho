@@ -78,7 +78,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <img src="/logo.png" alt="Gordinho Burguer" className="brand-logo" />
-          <span>GORDINHO <span className="red-text">BURGUER</span></span>
+          <span><span>GORDINHO</span><span className="red-text">BURGUER</span></span>
         </Link>
 
         {/* Desktop Navigation Links */}

@@ -31,6 +31,7 @@
 
 .search-icon {
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .menu-search-input {
@@ -39,43 +40,54 @@
   width: 100%;
   font-size: 1rem;
   color: #fff;
+  min-width: 0;
 }
 
 .menu-search-input::placeholder {
   color: var(--text-muted);
 }
 
-/* Category Pills */
+/* ===== CATEGORY PILLS ===== */
 .menu-categories-pills {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+  gap: 0.65rem;
+  padding: 0.5rem 0;
+  /* NO overflow-x: auto — wraps instead */
 }
 
 .category-pill {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   color: var(--text-secondary);
-  padding: 0.6rem 1.2rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 30px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-family: var(--font-title);
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-sizing: border-box;
   transition: all var(--transition-normal);
 }
 
+.category-pill svg {
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 .category-pill:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   color: white;
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .category-pill.active {
@@ -86,18 +98,18 @@
   transform: translateY(-1px);
 }
 
-/* Skeletons Styling */
+/* ===== SKELETON LOADING ===== */
 .skeleton-card {
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  height: 380px;
+  height: 340px;
   display: flex;
   flex-direction: column;
 }
 
 .skeleton-img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   border-radius: 0;
 }
 
@@ -111,12 +123,12 @@
 
 .skeleton-title {
   width: 60%;
-  height: 24px;
+  height: 22px;
 }
 
 .skeleton-text {
   width: 100%;
-  height: 14px;
+  height: 13px;
 }
 
 .skeleton-text.short {
@@ -132,15 +144,15 @@
 
 .skeleton-price {
   width: 30%;
-  height: 24px;
+  height: 22px;
 }
 
 .skeleton-btn {
   width: 40%;
-  height: 36px;
+  height: 34px;
 }
 
-/* Empty States */
+/* ===== EMPTY STATES ===== */
 .menu-empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -170,12 +182,25 @@
   font-size: 0.85rem;
 }
 
-/* Scroll styling for categories on mobile */
-@media (max-width: 768px) {
+/* ===== MOBILE ===== */
+@media (max-width: 640px) {
+  .menu-controls-container {
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
   .menu-categories-pills {
     justify-content: flex-start;
-    padding: 0.5rem 1rem;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
+    padding: 0.4rem 0;
+    gap: 0.5rem;
+  }
+
+  .category-pill {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .menu-search-wrapper {
+    max-width: 100%;
   }
 }
