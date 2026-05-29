@@ -143,6 +143,13 @@ export default function CartDrawer() {
       const order = await placeOrder(deliveryType, address, paymentMethod, guestName, guestPhone);
       setCreatedOrder(order);
 
+      // Persist guest order tracking params in localStorage
+      if (!user && order) {
+        localStorage.setItem('recentGuestOrderId', order.id);
+        localStorage.removeItem('dismissedGuestOrderId');
+        localStorage.removeItem('chimePlayedGuestOrderId');
+      }
+
       if (paymentMethod === 'pix') {
         setStep('pix-qr');
       } else {
