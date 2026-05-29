@@ -599,6 +599,10 @@
 /* Guest success step */
 .guest-success-step {
   padding: 1.2rem;
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .guest-success-card {
@@ -678,6 +682,12 @@
   
   .pix-step-container {
     padding: 1.2rem 1rem !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .guest-success-step {
+    padding: 1rem !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
   }

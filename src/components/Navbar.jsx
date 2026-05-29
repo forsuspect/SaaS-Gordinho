@@ -15,52 +15,67 @@ export default function Navbar() {
   // Polling check for guest order status with persistent localStorage tracking
   useEffect(() => {
     // Only track guest order if NOT logged in as a registered user
-    if (!user && orders && orders.length > 0) {
+    if (!user) {
       const recentOrderId = localStorage.getItem('recentGuestOrderId');
       const dismissedId = localStorage.getItem('dismissedGuestOrderId');
 
       if (recentOrderId && recentOrderId !== dismissedId) {
-        // Find this guest order inside active synchronized orders list
-        const guestOrder = orders.find(o => o.id === recentOrderId);
-        if (guestOrder) {
-          // Check if order status transitioned to a completed or ready state
-          if (['ready', 'shipping', 'delivered'].includes(guestOrder.status)) {
-            setGuestOrderAlert(guestOrder);
+        const checkStatus = async () => {
+          try {
+            const { dbService } = await import('../services/db');
+            const guestOrder = await dbService.getOrderById(recentOrderId);
+            
+            if (guestOrder) {
+              // Check if order status transitioned to a completed or ready state
+              if (['ready', 'shipping', 'delivered'].includes(guestOrder.status)) {
+                setGuestOrderAlert(guestOrder);
 
-            // Play high operational chime sound exactly once per order
-            const chimePlayedId = localStorage.getItem('chimePlayedGuestOrderId');
-            if (chimePlayedId !== guestOrder.id) {
-              localStorage.setItem('chimePlayedGuestOrderId', guestOrder.id);
-              try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const playTone = (freq, startTime, duration) => {
-                  const osc = audioCtx.createOscillator();
-                  const gainNode = audioCtx.createGain();
-                  osc.type = 'sine';
-                  osc.frequency.setValueAtTime(freq, startTime);
-                  gainNode.gain.setValueAtTime(0.15, startTime);
-                  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                  osc.connect(gainNode);
-                  gainNode.connect(audioCtx.destination);
-                  osc.start(startTime);
-                  osc.stop(startTime + duration);
-                };
-                const now = audioCtx.currentTime;
-                // High-pitched bright happy melody: E6 -> G6 -> C7
-                playTone(1318.51, now, 0.25);
-                playTone(1567.98, now + 0.12, 0.25);
-                playTone(2093.00, now + 0.24, 0.45);
-              } catch (_) {
-                // Browser audio autoplay policy fallback
+                // Play high operational chime sound exactly once per order
+                const chimePlayedId = localStorage.getItem('chimePlayedGuestOrderId');
+                if (chimePlayedId !== guestOrder.id) {
+                  localStorage.setItem('chimePlayedGuestOrderId', guestOrder.id);
+                  try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const playTone = (freq, startTime, duration) => {
+                      const osc = audioCtx.createOscillator();
+                      const gainNode = audioCtx.createGain();
+                      osc.type = 'sine';
+                      osc.frequency.setValueAtTime(freq, startTime);
+                      gainNode.gain.setValueAtTime(0.15, startTime);
+                      gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                      osc.connect(gainNode);
+                      gainNode.connect(audioCtx.destination);
+                      osc.start(startTime);
+                      osc.stop(startTime + duration);
+                    };
+                    const now = audioCtx.currentTime;
+                    // High-pitched bright happy melody: E6 -> G6 -> C7
+                    playTone(1318.51, now, 0.25);
+                    playTone(1567.98, now + 0.12, 0.25);
+                    playTone(2093.00, now + 0.24, 0.45);
+                  } catch (_) {
+                    // Browser audio autoplay policy fallback
+                  }
+                }
+              } else {
+                setGuestOrderAlert(null);
               }
             }
+          } catch (err) {
+            console.error('Guest order poll check error:', err);
           }
-        }
+        };
+
+        checkStatus();
+        const pollInterval = setInterval(checkStatus, 8000); // Check every 8 seconds specifically for this guest order
+        return () => clearInterval(pollInterval);
+      } else {
+        setGuestOrderAlert(null);
       }
     } else {
       setGuestOrderAlert(null);
     }
-  }, [orders, user]);
+  }, [user, orders]);
 
   const handleDismissGuestAlert = () => {
     if (guestOrderAlert) {
@@ -267,7 +282,7 @@ export default function Navbar() {
           <div className="banner-content">
             <span className="bell-emoji pulsate">🔔</span>
             <p>
-              ¡Oba! Seu pedido <strong>#{guestOrderAlert.order_number}</strong> está <strong>PRONTO</strong>!
+              Oba! Seu pedido <strong>#{guestOrderAlert.order_number}</strong> está <strong>PRONTO</strong>!
               {guestOrderAlert.status === 'shipping' && ' 🛵 Saiu para entrega!'}
               {guestOrderAlert.status === 'ready' && guestOrderAlert.delivery_type === 'takeout' && ' 🏪 Já pode retirar na loja!'}
               {guestOrderAlert.status === 'ready' && guestOrderAlert.delivery_type === 'delivery' && ' 📦 Sendo embalado para entrega!'}

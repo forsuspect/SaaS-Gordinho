@@ -621,6 +621,23 @@ export const dbService = {
     return JSON.parse(localStorage.getItem('bh_orders') || '[]');
   },
 
+  async getOrderById(id) {
+    const sb = await getValidSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb.from('orders').select('*').eq('id', id).single();
+        if (!error && data) {
+          return {
+            ...data,
+            waiter_name: data.waiter_name || data.delivery_address?.waiter_name || ''
+          };
+        }
+      } catch (_) { /* silent fallback */ }
+    }
+    const list = JSON.parse(localStorage.getItem('bh_orders') || '[]');
+    return list.find(o => o.id === id) || null;
+  },
+
   async saveOrder(order) {
     // Copy waiter_name inside delivery_address object to preserve it on Supabase JSONB
     if (order.waiter_name) {
